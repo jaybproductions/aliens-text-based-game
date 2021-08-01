@@ -10,12 +10,12 @@ def main():
     # initialize inventory and rooms
     # still need to properly add rooms and inventory
     rooms: dict = {"Kitchen": {"North": "Laboratory", "South": "Storage", "East": "Indoor Farm", "West": "Command Room"},
-                   "Laboratory": {"South": "Kitchen", "East": "Ammo Room"},
-                   "Ammo Room": {"West": "Laboratory"},
-                   "Storage": {"East": "Engine Room", "North": "Kitchen"},
-                   "Command Room": {"East": "Kitchen"},
-                   "Indoor Farm": {"North": "Cryo-Chamber"},
-                   "Cryo-Chamber": {"South": "Indoor Farm"},
+                   "Laboratory": {"South": "Kitchen", "East": "Ammo Room", "item": "ChemicalX"},
+                   "Ammo Room": {"West": "Laboratory", "item": "RayGun"},
+                   "Storage": {"East": "Engine Room", "North": "Kitchen", "item": "Metal"},
+                   "Command Room": {"East": "Kitchen", "item": "Radio"},
+                   "Indoor Farm": {"North": "Cryo-Chamber", "item": "Potatoes"},
+                   "Cryo-Chamber": {"South": "Indoor Farm", "item": "Cryo-nade"},
                    }
     inventory: list = []
 
@@ -30,6 +30,9 @@ def main():
     while running:
 
         print(f"You're in the {current_room}.")
+        if "item" in rooms[current_room].keys():
+            item_in_room = rooms[current_room]["item"]
+            print(f"You see a {item_in_room}")
         print(f"Inventory: {inventory}")
         print("---------------")
         get_input: str = input("Enter Your Move: \n")
@@ -41,7 +44,9 @@ def main():
                 current_room = change_room(input_command, rooms, current_room)
             elif input_prefix == 1:
                 # this is get - handle inventory validation
-                pass
+                new_inventory, new_rooms = handle_pickup_item(input_command, inventory, rooms, current_room)
+                inventory = new_inventory
+                rooms = new_rooms
             else:
                 # handle invalid input
                 print(input_command)
@@ -95,6 +100,22 @@ def change_room(input_command: str, rooms: list, current_room: str):
         print("You cannot go this way.")
     # return the updated room
     return updated_room
+
+
+def handle_pickup_item(item: str, item_inventory: list, rooms: dict, current_room):
+    temp_inv: list = item_inventory
+    temp_rooms: dict = rooms
+    for key, item_value in temp_rooms[current_room].items():
+
+        if key == "item":
+            if item == item_value:
+                temp_inv.append(item_value)
+                del temp_rooms[current_room]["item"]
+                break
+            else:
+                print("this item is not valid")
+    # print(temp_rooms, temp_inv)
+    return temp_inv, temp_rooms
 
 
 # main start command
