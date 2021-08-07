@@ -28,7 +28,7 @@ def main():
                    "Cryo-Chamber": {"South": "Indoor Farm", "West": "Kitchen", "item": "Cryo-nade"},
                    "Engine Room": {"item": "Alien" }
                    }
-    inventory: list = [0, 1, 2, 3, 4]
+    inventory: list = []
 
     # initialize starting room
     current_room: str = "Kitchen"
